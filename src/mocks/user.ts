@@ -3,7 +3,7 @@ import { UserState, UserStructure } from "../store/features/types";
 
 export const username = "Pet";
 export const email = "pet@petalert.com";
-const password = "PetAdmin";
+const password = `${process.env.TEST_PASSWORD}`;
 const token = "mockedToken";
 
 export const mockedUserCredentials: UserCredentials = {
