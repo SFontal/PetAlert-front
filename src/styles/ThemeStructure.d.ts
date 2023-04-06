@@ -10,6 +10,7 @@ declare module "styled-components" {
       adopt: string;
       care: string;
       lost: string;
+      placeholder: string;
     };
     fonts: {
       main: string;
