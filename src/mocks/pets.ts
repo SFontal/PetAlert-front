@@ -34,6 +34,6 @@ export const petNoa: PetStructure = {
   imageUrl: "",
 };
 
-const petsTest: PetsStructure = [petMute, petRoc, petNoa];
+const pets: PetsStructure = [petMute, petRoc, petNoa];
 
-export default petsTest;
+export default pets;
