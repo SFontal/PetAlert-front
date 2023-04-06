@@ -1,5 +1,5 @@
 import { renderHook } from "@testing-library/react";
-import petsTest from "../../mocks/petsTest";
+import pets from "../../mocks/pets";
 import server from "../../mocks/server";
 import Wrapper from "../../mocks/Wrapper";
 import { loadPetsActionCreator } from "../../store/features/petSlice/petSlice";
@@ -27,9 +27,7 @@ describe("Given a useApi custom hook", () => {
 
       await getPets();
 
-      expect(mockDispatch).toHaveBeenCalledWith(
-        loadPetsActionCreator(petsTest)
-      );
+      expect(mockDispatch).toHaveBeenCalledWith(loadPetsActionCreator(pets));
     });
   });
 });
