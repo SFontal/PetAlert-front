@@ -1,23 +1,27 @@
 import { screen } from "@testing-library/react";
 import { renderRouterWithProviders } from "../../testUtils/renderRouterWithProviders";
-import { renderWithProviders } from "../../testUtils/renderWithProviders";
 import LoginPage from "./LoginPage";
 
 describe("Given a LoginPage component", () => {
   describe("When it's rendered", () => {
     test("Then it should show a heading with text 'Sign into your account'", () => {
+      const text = "Sign into your account";
+      const level = 2;
+
       renderRouterWithProviders(<LoginPage />);
 
-      const text = "Sign into your account";
-
-      const expectedHeading = screen.getByRole("heading", { name: text });
+      const expectedHeading = screen.getByRole("heading", {
+        name: text,
+        level,
+      });
 
       expect(expectedHeading).toBeInTheDocument();
     });
 
     test("Then it should show an input labeled 'Email'", () => {
-      renderWithProviders(<LoginPage />);
       const label = "Email";
+
+      renderRouterWithProviders(<LoginPage />);
 
       const expectedEmailInput = screen.getByLabelText(label);
 
@@ -25,8 +29,9 @@ describe("Given a LoginPage component", () => {
     });
 
     test("Then it should show an input labeled 'Password'", () => {
-      renderWithProviders(<LoginPage />);
       const label = "Password";
+
+      renderRouterWithProviders(<LoginPage />);
 
       const expectedPasswordInput = screen.getByLabelText(label);
 
@@ -36,21 +41,21 @@ describe("Given a LoginPage component", () => {
     test("Then it should show a button with the text 'Login!' on it", () => {
       const textButton = "Login!";
 
-      renderWithProviders(<LoginPage />);
+      renderRouterWithProviders(<LoginPage />);
 
       const expectedButton = screen.getByRole("button", { name: textButton });
 
       expect(expectedButton).toBeInTheDocument();
     });
 
-    test("Then it should show a link with text 'Register Now'", () => {
-      renderWithProviders(<LoginPage />);
+    test("Then it should show a link with 'Register Now' text", () => {
+      const linkLabel = "link to user register form";
 
-      const linkText = "Register Now";
+      renderRouterWithProviders(<LoginPage />);
 
-      const expectedText = screen.getByRole("link", { name: linkText });
+      const expectedLink = screen.getByLabelText(linkLabel);
 
-      expect(expectedText).toBeInTheDocument();
+      expect(expectedLink).toBeInTheDocument();
     });
   });
 });

@@ -1,26 +1,27 @@
 import styled from "styled-components";
 
 const LoginPageStyled = styled.section`
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
   padding: 15px 10px;
 
-  .heading {
+  .header {
     text-align: center;
     align-self: center;
-    margin-bottom: 50px;
     font-weight: 600;
+    font-family: "Baloo Bhai 2";
 
-    h2,
-    span {
-      font-family: "Baloo Bhai 2";
+    > * {
       font-size: 1.5rem;
     }
   }
 
-  .highlighted {
+  [class*="highlighted"] {
     color: ${(props) => props.theme.colors.quaternary};
   }
 
-  > span {
+  .footer {
     display: block;
     text-align: center;
   }
