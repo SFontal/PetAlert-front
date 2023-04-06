@@ -32,8 +32,6 @@ const useUser = () => {
       localStorage.setItem("token", token);
 
       navigate("/");
-
-      window.location.reload();
     } catch (error) {
       dispatch(openModalActionCreator({ isOpen: true, isError: true }));
     }
@@ -45,8 +43,6 @@ const useUser = () => {
     dispatch(logoutUserActionCreator());
 
     navigate("/login");
-
-    window.location.reload();
   };
 
   return { loginUser, logoutUser };
