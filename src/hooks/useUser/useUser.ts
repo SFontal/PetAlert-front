@@ -1,14 +1,19 @@
 import decodeToken from "jwt-decode";
 import { useAppDispatch } from "../../store/hooks";
 import { UserCredentials, CustomJwtPayload, LoginResponse } from "../types";
-import { loginUserActionCreator } from "../../store/features/userSlice/userSlice";
+import {
+  loginUserActionCreator,
+  logoutUserActionCreator,
+} from "../../store/features/userSlice/userSlice";
+import { useNavigate } from "react-router-dom";
 import { openModalActionCreator } from "../../store/features/uiSlice/uiSlice";
 
 const apiUrl = process.env.REACT_APP_URL!;
-const endpoint = "/users/login";
+const endpoint = "/user/login";
 
 const useUser = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const loginUser = async (userCredentials: UserCredentials) => {
     try {
@@ -25,12 +30,22 @@ const useUser = () => {
       dispatch(loginUserActionCreator({ username, email, token }));
 
       localStorage.setItem("token", token);
+
+      navigate("/");
     } catch (error) {
       dispatch(openModalActionCreator({ isOpen: true, isError: true }));
     }
   };
 
-  return { loginUser };
+  const logoutUser = () => {
+    localStorage.removeItem("token");
+
+    dispatch(logoutUserActionCreator());
+
+    navigate("/login");
+  };
+
+  return { loginUser, logoutUser };
 };
 
 export default useUser;

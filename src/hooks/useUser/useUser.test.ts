@@ -1,11 +1,14 @@
-import { renderHook } from "@testing-library/react";
+import { act, renderHook } from "@testing-library/react";
 import server from "../../mocks/server";
-import { CustomJwtPayload, UserCredentials } from "../types";
 import useUser from "./useUser";
 import Wrapper from "../../mocks/Wrapper";
-import { UserStructure } from "../../store/features/types";
+import { mockedTokenPayload } from "../../mocks/token";
+import { mockedUserCredentials, mockedUserStructure } from "../../mocks/user";
 import decodeToken from "jwt-decode";
-import { loginUserActionCreator } from "../../store/features/userSlice/userSlice";
+import {
+  loginUserActionCreator,
+  logoutUserActionCreator,
+} from "../../store/features/userSlice/userSlice";
 import { openModalActionCreator } from "../../store/features/uiSlice/uiSlice";
 
 beforeAll(() => {
@@ -18,30 +21,18 @@ afterAll(() => {
   jest.clearAllMocks();
 });
 
-const mockDispatcher = jest.fn();
+const mockedDispatch = jest.fn();
 
 jest.mock("../../store/hooks", () => ({
   ...jest.requireActual("../../store/hooks"),
-  useAppDispatch: () => mockDispatcher,
+  useAppDispatch: () => mockedDispatch,
 }));
 
 jest.mock("jwt-decode", () => jest.fn());
 
-const userCredentials: UserCredentials = {
-  email: "pet@petalert.com",
-  password: "PetAdmin",
-};
-
-const mockTokenPayload: CustomJwtPayload = {
-  username: "Pet",
-  email: "pet@petalert.com",
-};
-
-const mockToken = "mockedToken";
-
 describe("Given a useUser custom Hook", () => {
   describe("When its loginUser function is called with a registered user (username 'pet@petalert.com' and password 'PetAdmin')", () => {
-    test("Then it should call the dispatch with the loginUser Action creator", async () => {
+    test("Then it should call the dispatch with the login user action creator", async () => {
       const {
         result: {
           current: { loginUser },
@@ -49,25 +40,19 @@ describe("Given a useUser custom Hook", () => {
       } = renderHook(() => useUser(), { wrapper: Wrapper });
 
       (decodeToken as jest.MockedFunction<typeof decodeToken>).mockReturnValue(
-        mockTokenPayload
+        mockedTokenPayload
       );
 
-      const mockedUser: UserStructure = {
-        username: mockTokenPayload.username,
-        email: mockTokenPayload.email,
-        token: mockToken,
-      };
+      await act(() => loginUser(mockedUserCredentials));
 
-      await loginUser(userCredentials);
-
-      expect(mockDispatcher).toHaveBeenCalledWith(
-        loginUserActionCreator(mockedUser)
+      expect(mockedDispatch).toHaveBeenCalledWith(
+        loginUserActionCreator(mockedUserStructure)
       );
     });
   });
 
   describe("When its loginUser function receives an unregistered user", () => {
-    test("Then it should call the dispatch with the openModal action creator", async () => {
+    test("Then it should call the dispatch with the open modal action creator", async () => {
       const {
         result: {
           current: { loginUser },
@@ -76,11 +61,25 @@ describe("Given a useUser custom Hook", () => {
 
       const modalState = { isOpen: true, isError: true };
 
-      await loginUser(userCredentials);
+      await act(() => loginUser(mockedUserCredentials));
 
-      expect(mockDispatcher).toHaveBeenCalledWith(
+      expect(mockedDispatch).toHaveBeenCalledWith(
         openModalActionCreator(modalState)
       );
+    });
+  });
+
+  describe("When its logoutUser function is called", () => {
+    test("Then it should call the dispatch with the logout user action creator", () => {
+      const {
+        result: {
+          current: { logoutUser },
+        },
+      } = renderHook(() => useUser(), { wrapper: Wrapper });
+
+      act(() => logoutUser());
+
+      expect(mockedDispatch).toHaveBeenCalledWith(logoutUserActionCreator());
     });
   });
 });
