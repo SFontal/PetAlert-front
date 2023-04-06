@@ -1,39 +1,27 @@
-import { PreloadedState } from "@reduxjs/toolkit";
-import { screen, waitFor } from "@testing-library/react";
+import { act, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { UserCredentials } from "../../hooks/types";
-import { RootState } from "../../store";
-import { UserStructure } from "../../store/features/types";
+import { mockedUserCredentials, mockedUserState } from "../../mocks/user";
 import { renderWithProviders } from "../../testUtils/renderWithProviders";
 import LoginForm from "./LoginForm";
 
-const mockLoginUser = jest.fn();
-
+const mockedLoginUser = jest.fn();
 jest.mock("../../hooks/useUser/useUser", () => () => ({
-  loginUser: mockLoginUser,
+  loginUser: mockedLoginUser,
 }));
 
-describe("Given EnventForm component", () => {
-  const user: UserCredentials = {
-    email: "pet@petalert.com",
-    password: "PetAdmin",
-  };
+const { email, password } = mockedUserCredentials;
+const emailLabel = "Email";
+const passwordLabel = "Password";
+const buttonText = "Login!";
 
-  const emailLabel = "Email";
-  const passwordLabel = "Password";
-
+describe("Given LoginForm component", () => {
   describe("When its rendered", () => {
     test("Then it should show an input labeled 'Email'", () => {
-      const userState: UserStructure = {
-        username: "Pete",
-        email: "Pete@lluismemira.cat",
-        token: "kljdfs2390r3wnkfs09",
-      };
-      const preloadStateUser: PreloadedState<RootState> = { user: userState };
+      renderWithProviders(<LoginForm />, mockedUserState);
 
-      renderWithProviders(<LoginForm />, preloadStateUser);
-
-      const expectedEmailInput = screen.getByLabelText(emailLabel);
+      const expectedEmailInput = screen.getByRole("textbox", {
+        name: emailLabel,
+      });
 
       expect(expectedEmailInput).toBeInTheDocument();
     });
@@ -47,11 +35,9 @@ describe("Given EnventForm component", () => {
     });
 
     test("Then it should show a button with the text 'Login!' on it", () => {
-      const textButton = "Login!";
-
       renderWithProviders(<LoginForm />);
 
-      const expectedButton = screen.getByRole("button", { name: textButton });
+      const expectedButton = screen.getByRole("button", { name: buttonText });
 
       expect(expectedButton).toBeInTheDocument();
     });
@@ -61,11 +47,11 @@ describe("Given EnventForm component", () => {
     test("Then the value of this input changes", async () => {
       renderWithProviders(<LoginForm />);
 
-      const emailInput = screen.getByLabelText(emailLabel);
+      const emailInput = screen.getByRole("textbox", { name: emailLabel });
 
-      await waitFor(async () => await userEvent.type(emailInput, user.email));
+      await act(async () => await userEvent.type(emailInput, email));
 
-      expect(emailInput).toHaveValue(user.email);
+      expect(emailInput).toHaveValue(email);
     });
   });
 
@@ -75,11 +61,9 @@ describe("Given EnventForm component", () => {
 
       const passwordInput = screen.getByLabelText(passwordLabel);
 
-      await waitFor(
-        async () => await userEvent.type(passwordInput, user.password)
-      );
+      await act(async () => await userEvent.type(passwordInput, password));
 
-      expect(passwordInput).toHaveValue(user.password);
+      expect(passwordInput).toHaveValue(password);
     });
   });
 
@@ -89,15 +73,15 @@ describe("Given EnventForm component", () => {
 
       const emailInput = screen.getByLabelText(emailLabel);
       const passwordInput = screen.getByLabelText(passwordLabel);
-      const submitButton = screen.getByRole("button");
+      const submitButton = screen.getByRole("button", { name: buttonText });
 
       await waitFor(async () => {
-        await userEvent.type(emailInput, user.email);
-        await userEvent.type(passwordInput, user.password);
+        await userEvent.type(emailInput, email);
+        await userEvent.type(passwordInput, password);
         await userEvent.click(submitButton);
       });
 
-      expect(mockLoginUser).toHaveBeenCalledWith(user);
+      expect(mockedLoginUser).toHaveBeenCalledWith({ email, password });
     });
   });
 });
