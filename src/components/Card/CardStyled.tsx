@@ -53,6 +53,7 @@ const CardStyled = styled.article`
   .info {
     align-items: center;
     display: flex;
+    gap: 15px;
     justify-content: space-between;
 
     &__text {
@@ -61,7 +62,6 @@ const CardStyled = styled.article`
       font-family: "Baloo Bhai 2";
       font-size: 20px;
       justify-content: space-between;
-      padding: 5px 10px;
       width: 100%;
 
       .text__name {
@@ -69,13 +69,17 @@ const CardStyled = styled.article`
       }
     }
 
-    Button {
+    &__view-more {
       background-color: ${(props) => props.theme.colors.main};
       border-color: ${(props) => props.theme.colors.quaternary};
       color: ${(props) => props.theme.colors.terciary};
       font-size: 20px;
       font-weight: 600;
       min-width: 100px;
+
+      &:hover {
+        border-color: ${(props) => props.theme.colors.terciary};
+      }
     }
   }
 `;
