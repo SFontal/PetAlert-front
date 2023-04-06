@@ -37,8 +37,8 @@ const LoginForm = (): JSX.Element => {
   };
 
   return (
-    <LoginFormStyled className="login-form" onSubmit={onSubmitHandler}>
-      <fieldset className="login-form__email email">
+    <LoginFormStyled className="login__form form" onSubmit={onSubmitHandler}>
+      <fieldset className="form__email email">
         <label htmlFor="email">Email</label>
         <div className="email-box">
           <input
@@ -57,7 +57,7 @@ const LoginForm = (): JSX.Element => {
           </div>
         </div>
       </fieldset>
-      <fieldset className="login-form__password password">
+      <fieldset className="form__password password">
         <label htmlFor="password">Password</label>
         <div className="password-box">
           <input
@@ -76,8 +76,8 @@ const LoginForm = (): JSX.Element => {
           </div>
         </div>
       </fieldset>
-      <Button className="login-form__submit" text="Login!" />
-      <Birdy className="login-form__image" />
+      <Button className="form__submit" text="Login!" />
+      <Birdy className="form__image" />
     </LoginFormStyled>
   );
 };

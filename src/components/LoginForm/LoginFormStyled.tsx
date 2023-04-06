@@ -57,7 +57,7 @@ const LoginFormStyled = styled.form`
     margin-bottom: 20px;
   }
 
-  .login-form {
+  .form {
     &__submit {
       align-self: center;
       font-weight: 600;
