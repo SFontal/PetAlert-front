@@ -12,7 +12,7 @@ const Card = ({
   pet: { age, gender, imageUrl, name, tag },
 }: CardProps): JSX.Element => {
   return (
-    <CardStyled className="card">
+    <CardStyled className="pet__card card">
       <div className="card__image image">
         <img
           className="image__pet"
@@ -26,14 +26,19 @@ const Card = ({
       <div className="card__info info">
         <div className="info__text text">
           <span className="text__name">{name}</span>
-          <span className="text__old">{age} y.o.</span>
+          <span className="text__age">{age} y.o.</span>
           {gender === "male" ? (
-            <Male aria-label={`text__gender`} />
+            <Male aria-label={`gender ${gender}`} role="img" title={gender} />
           ) : (
-            <Female aria-label={`text__gender`} />
+            <Female aria-label={`gender ${gender}`} role="img" title={gender} />
           )}
         </div>
-        <Button text="View +" />
+        <Button
+          className="info__view-more"
+          text="View +"
+          path="/login"
+          isLink={true}
+        />
       </div>
     </CardStyled>
   );
