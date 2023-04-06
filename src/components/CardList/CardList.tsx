@@ -12,9 +12,9 @@ const CardList = (): JSX.Element => {
   }, [getPets]);
 
   return (
-    <ul>
+    <ul className="home__pet-alerts pet-alerts">
       {pets.map((pet) => (
-        <li key={pet.id}>
+        <li className="pet-alerts__pet pet" key={pet.id}>
           <Card pet={pet} />
         </li>
       ))}
