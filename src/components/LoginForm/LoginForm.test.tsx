@@ -1,8 +1,9 @@
-import { act, screen, waitFor } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { mockedUserCredentials, mockedUserState } from "../../mocks/user";
 import { renderWithProviders } from "../../testUtils/renderWithProviders";
 import LoginForm from "./LoginForm";
+import React from "react";
 
 const mockedLoginUser = jest.fn();
 jest.mock("../../hooks/useUser/useUser", () => () => ({
@@ -13,7 +14,7 @@ const { email, password } = mockedUserCredentials;
 const emailLabel = "Email";
 const passwordLabel = "Password";
 const iconTitle = "Unhide password";
-const buttonText = "Login!";
+const buttonAriaLabel = "click to login";
 
 describe("Given LoginForm component", () => {
   describe("When it is rendered", () => {
@@ -43,10 +44,12 @@ describe("Given LoginForm component", () => {
       expect(expectedImage).toBeInTheDocument();
     });
 
-    test("Then it should show a button with the text 'Login!' on it", () => {
+    test("Then it should show a button with 'click to login' as aria label", () => {
       renderWithProviders(<LoginForm />);
 
-      const expectedButton = screen.getByRole("button", { name: buttonText });
+      const expectedButton = screen.getByRole("button", {
+        name: buttonAriaLabel,
+      });
 
       expect(expectedButton).toBeInTheDocument();
     });
@@ -58,7 +61,7 @@ describe("Given LoginForm component", () => {
 
       const expectedIcon = screen.getByRole("img", { name: iconTitle });
 
-      await act(async () => await userEvent.click(expectedIcon));
+      await userEvent.click(expectedIcon);
 
       expect(expectedIcon).not.toBeInTheDocument();
     });
@@ -69,7 +72,7 @@ describe("Given LoginForm component", () => {
       renderWithProviders(<LoginForm />);
 
       const crossOutEyeIcon = screen.getByRole("img", { name: iconTitle });
-      await act(async () => await userEvent.click(crossOutEyeIcon));
+      await userEvent.click(crossOutEyeIcon);
 
       const expectedNewIcon = screen.getByRole("img", { name: newIconTitle });
 
@@ -83,7 +86,7 @@ describe("Given LoginForm component", () => {
 
       const emailInput = screen.getByRole("textbox", { name: emailLabel });
 
-      await act(async () => await userEvent.type(emailInput, email));
+      await userEvent.type(emailInput, email);
 
       expect(emailInput).toHaveValue(email);
     });
@@ -93,9 +96,12 @@ describe("Given LoginForm component", () => {
     test("Then the value of this input should change", async () => {
       renderWithProviders(<LoginForm />);
 
+      const emailInput = screen.getByLabelText(emailLabel);
+      await userEvent.type(emailInput, email);
+
       const passwordInput = screen.getByLabelText(passwordLabel);
 
-      await act(async () => await userEvent.type(passwordInput, password));
+      await userEvent.type(passwordInput, password);
 
       expect(passwordInput).toHaveValue(password);
     });
@@ -107,13 +113,13 @@ describe("Given LoginForm component", () => {
 
       const emailInput = screen.getByLabelText(emailLabel);
       const passwordInput = screen.getByLabelText(passwordLabel);
-      const submitButton = screen.getByRole("button", { name: buttonText });
-
-      await waitFor(async () => {
-        await userEvent.type(emailInput, email);
-        await userEvent.type(passwordInput, password);
-        await userEvent.click(submitButton);
+      const submitButton = screen.getByRole("button", {
+        name: buttonAriaLabel,
       });
+
+      await userEvent.type(emailInput, email);
+      await userEvent.type(passwordInput, password);
+      await userEvent.click(submitButton);
 
       expect(mockedLoginUser).toHaveBeenCalledWith({ email, password });
     });
