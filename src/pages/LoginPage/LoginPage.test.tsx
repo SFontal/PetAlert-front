@@ -38,12 +38,14 @@ describe("Given a LoginPage component", () => {
       expect(expectedPasswordInput).toBeInTheDocument();
     });
 
-    test("Then it should show a button with the text 'Login!' on it", () => {
-      const textButton = "Login!";
+    test("Then it should show a button with 'click to login' as aria label", () => {
+      const buttonAriaLabel = "click to login";
 
       renderRouterWithProviders(<LoginPage />);
 
-      const expectedButton = screen.getByRole("button", { name: textButton });
+      const expectedButton = screen.getByRole("button", {
+        name: buttonAriaLabel,
+      });
 
       expect(expectedButton).toBeInTheDocument();
     });
