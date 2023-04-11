@@ -14,7 +14,8 @@ const ButtonStyled = styled.button`
   padding: 5px;
 
   :disabled {
-    opacity: 0.75;
+    background-color: transparent;
+    color: ${(props) => props.theme.colors.terciary};
   }
 `;
 
