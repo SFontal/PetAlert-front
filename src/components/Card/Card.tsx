@@ -37,6 +37,7 @@ const Card = ({
           className="info__view-more"
           text="View +"
           path="/login"
+          ariaLabel="link to pet detail page"
           isLink={true}
         />
       </div>

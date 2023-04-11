@@ -1,12 +1,12 @@
 import Card from "./Card";
-import { renderWithProviders } from "../../testUtils/renderWithProviders";
 import { petMute, petNoa, petRoc } from "../../mocks/pets";
 import { screen } from "@testing-library/react";
+import { renderRouterWithProviders } from "../../testUtils/renderRouterWithProviders";
 
 describe("Given a Card component", () => {
   describe("When it is rendered", () => {
     test("Then it should show a pet article", () => {
-      renderWithProviders(<Card pet={petMute} />);
+      renderRouterWithProviders(<Card pet={petMute} />);
 
       const expectedImage = screen.getByRole("article");
 
@@ -16,7 +16,7 @@ describe("Given a Card component", () => {
     test("Then it should show an image of a pet", () => {
       const imageAlt = `${petMute.name} posing for his new family`;
 
-      renderWithProviders(<Card pet={petMute} />);
+      renderRouterWithProviders(<Card pet={petMute} />);
 
       const expectedImage = screen.getByRole("img", { name: imageAlt });
 
@@ -24,11 +24,11 @@ describe("Given a Card component", () => {
     });
 
     test("Then it should show a link with a button shape", () => {
-      const buttonText = "View +";
+      const buttonLabel = "link to pet detail page";
 
-      renderWithProviders(<Card pet={petMute} />);
+      renderRouterWithProviders(<Card pet={petMute} />);
 
-      const expectedButton = screen.getByRole("link", { name: buttonText });
+      const expectedButton = screen.getByRole("link", { name: buttonLabel });
 
       expect(expectedButton).toBeInTheDocument();
     });
@@ -38,7 +38,7 @@ describe("Given a Card component", () => {
     test("Then it should show a male symbol", () => {
       const symbolLabel = `gender ${petRoc.gender}`;
 
-      renderWithProviders(<Card pet={petRoc} />);
+      renderRouterWithProviders(<Card pet={petRoc} />);
 
       const expectedSymbol = screen.getByRole("img", { name: symbolLabel });
 
@@ -50,7 +50,7 @@ describe("Given a Card component", () => {
     test("Then it should show a female symbol", () => {
       const symbolLabel = `gender ${petNoa.gender}`;
 
-      renderWithProviders(<Card pet={petNoa} />);
+      renderRouterWithProviders(<Card pet={petNoa} />);
 
       const expectedSymbol = screen.getByRole("img", { name: symbolLabel });
 
