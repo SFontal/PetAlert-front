@@ -12,3 +12,7 @@ export interface ModalState {
   isError: boolean;
   isOpen: boolean;
 }
+
+export interface UiState extends ModalState {
+  isSubmitDisabled: boolean;
+}

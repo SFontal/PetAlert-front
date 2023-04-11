@@ -1,25 +1,36 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ModalState } from "../types";
+import { ModalState, UiState } from "../types";
 
-export const initialUiState: ModalState = {
+const initialUiState: UiState = {
   isError: false,
   isOpen: false,
+  isSubmitDisabled: true,
 };
 
 export const uiSlice = createSlice({
   name: "ui",
   initialState: initialUiState,
   reducers: {
-    openModal: (currentUiState, action: PayloadAction<ModalState>) => ({
+    openModal: (
+      currentUiState: UiState,
+      action: PayloadAction<ModalState>
+    ): UiState => ({
       ...currentUiState,
       isOpen: true,
-      isError: action.payload.isError,
     }),
 
-    closeModal: (currentUiState) => ({
+    closeModal: (currentUiState: UiState): UiState => ({
+      ...initialUiState,
+    }),
+
+    ableSubmit: (currentUiState: UiState): UiState => ({
       ...currentUiState,
-      isOpen: false,
-      isError: false,
+      isSubmitDisabled: false,
+    }),
+
+    disableSubmit: (currentUiState: UiState): UiState => ({
+      ...currentUiState,
+      isSubmitDisabled: true,
     }),
   },
 });
@@ -28,4 +39,6 @@ export const uiReducer = uiSlice.reducer;
 export const {
   openModal: openModalActionCreator,
   closeModal: closeModalActionCreator,
+  ableSubmit: ableSubmitActionCreator,
+  disableSubmit: disableSubmitActionCreator,
 } = uiSlice.actions;
