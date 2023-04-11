@@ -24,6 +24,11 @@ const LoginFormStyled = styled.form`
         padding: 10px;
         width: 100%;
 
+        :disabled {
+          outline-offset: -1px;
+          outline: solid 2px white;
+        }
+
         :focus {
           outline-color: ${(props) => props.theme.colors.quaternary};
         }
@@ -36,13 +41,13 @@ const LoginFormStyled = styled.form`
       &__icon {
         align-items: center;
         background-color: ${(props) => props.theme.colors.terciary};
-        border-radius: 0 5px 5px 0;
+        border-radius: 0 4px 4px 0;
         display: flex;
         height: 38px;
         justify-content: center;
         padding: 0 5px;
         position: absolute;
-        right: 20px;
+        right: 21px;
         width: 40px;
 
         svg {
@@ -58,12 +63,36 @@ const LoginFormStyled = styled.form`
   }
 
   .form {
+    &__loading {
+      position: absolute;
+      top: 480px;
+      width: 70vw;
+      outline: solid 2px ${(props) => props.theme.colors.quaternary};
+      animation: borderAnimation 1.5s linear infinite;
+    }
+
+    @keyframes borderAnimation {
+      0% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
     &__submit {
       align-self: center;
       font-weight: 600;
       height: 40px;
       letter-spacing: 1px;
-      width: 80%;
+      width: 70vw;
+
+      :hover:not(:disabled) {
+        border-color: ${(props) => props.theme.colors.quaternary};
+      }
     }
 
     &__image {
