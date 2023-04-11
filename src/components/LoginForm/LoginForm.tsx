@@ -6,30 +6,62 @@ import { ReactComponent as HiddenPassword } from "../../assets/icons/hide.svg";
 import { ReactComponent as UnhiddenPassword } from "../../assets/icons/unhide.svg";
 import { ReactComponent as Birdy } from "../../assets/images/birdy.svg";
 import Button from "../Button/Button";
+import LoadingButton from "../LoadingButton/LoadingButton";
+import { useAppDispatch } from "../../store/hooks";
+import {
+  ableSubmitActionCreator,
+  disableSubmitActionCreator,
+} from "../../store/features/uiSlice/uiSlice";
 
-const initialFormData = { email: "", password: "", isHidden: true };
+const initialFormData = {
+  email: "",
+  password: "",
+  isHidden: true,
+  isInputDisabled: true,
+  isLoading: false,
+};
 
 const LoginForm = (): JSX.Element => {
   const { loginUser } = useUser();
+  const dispatch = useAppDispatch();
 
   const [email, setEmail] = useState(initialFormData.email);
   const [password, setPassword] = useState(initialFormData.password);
   const [isHidden, setIsHidden] = useState(initialFormData.isHidden);
+  const [isInputDisabled, setIsInputDisabled] = useState(
+    initialFormData.isInputDisabled
+  );
+  const [isLoading, setIsLoading] = useState(initialFormData.isLoading);
 
-  const handleEmail = ({
+  const emailInputHandler = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(value);
+
+    const emailInput = document.getElementById("email") as HTMLInputElement;
+    setIsInputDisabled(!emailInput.checkValidity());
   };
 
-  const handlePassword = ({
+  const passwordInputHandler = ({
     target: { value },
   }: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(value);
+
+    if (value.length === 8) {
+      dispatch(ableSubmitActionCreator());
+    }
+
+    if (value.length === 7) {
+      dispatch(disableSubmitActionCreator());
+    }
   };
 
-  const togglePasswordVisibility = () => {
+  const togglePasswordVisibilityHandler = () => {
     setIsHidden(!isHidden);
+  };
+
+  const onClickSubmitHandler = () => {
+    setIsLoading(true);
   };
 
   const onSubmitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -40,6 +72,9 @@ const LoginForm = (): JSX.Element => {
     setEmail(initialFormData.email);
     setPassword(initialFormData.password);
     setIsHidden(initialFormData.isHidden);
+    setIsInputDisabled(initialFormData.isInputDisabled);
+    setIsLoading(initialFormData.isLoading);
+    dispatch(disableSubmitActionCreator());
   };
 
   return (
@@ -53,13 +88,14 @@ const LoginForm = (): JSX.Element => {
             id="email"
             name="email"
             placeholder="Introduce your e-mail"
+            aria-placeholder="Introduce your e-mail"
             autoComplete="off"
-            onChange={handleEmail}
+            onChange={emailInputHandler}
             value={email}
             required
           />
-          <div className="email-box__icon">
-            <Mail />
+          <div className="email-box__icon icon">
+            <Mail className="icon__email" />
           </div>
         </div>
       </fieldset>
@@ -72,10 +108,12 @@ const LoginForm = (): JSX.Element => {
             id="password"
             name="password"
             placeholder="Introduce your password"
+            aria-placeholder="Introduce your password"
             autoComplete="off"
-            onChange={handlePassword}
+            onChange={passwordInputHandler}
             value={password}
             required
+            disabled={isInputDisabled}
           />
           <div className="password-box__icon icon">
             {isHidden ? (
@@ -83,21 +121,29 @@ const LoginForm = (): JSX.Element => {
                 className="icon__hidden-password"
                 role="img"
                 title="Unhide password"
-                onClick={togglePasswordVisibility}
+                onClick={togglePasswordVisibilityHandler}
               />
             ) : (
               <UnhiddenPassword
                 className="icon__unhidden-password"
                 role="img"
                 title="Hide password"
-                onClick={togglePasswordVisibility}
+                onClick={togglePasswordVisibilityHandler}
               />
             )}
           </div>
         </div>
       </fieldset>
-      <Button className="form__submit" text="Login!" />
-      <Birdy className="form__image" />
+      <Button
+        className="form__submit"
+        text="Login!"
+        ariaLabel="click to login"
+        onClick={onClickSubmitHandler}
+      />
+      {isLoading ? (
+        <LoadingButton className="form__loading" ariaLabel="Loading" />
+      ) : null}
+      <Birdy className="form__image" role="img" />
     </LoginFormStyled>
   );
 };
