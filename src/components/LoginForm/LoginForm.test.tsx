@@ -12,10 +12,11 @@ jest.mock("../../hooks/useUser/useUser", () => () => ({
 const { email, password } = mockedUserCredentials;
 const emailLabel = "Email";
 const passwordLabel = "Password";
+const iconTitle = "Unhide password";
 const buttonText = "Login!";
 
 describe("Given LoginForm component", () => {
-  describe("When its rendered", () => {
+  describe("When it is rendered", () => {
     test("Then it should show an input labeled 'Email'", () => {
       renderWithProviders(<LoginForm />, mockedUserState);
 
@@ -34,6 +35,14 @@ describe("Given LoginForm component", () => {
       expect(expectedPasswordInput).toBeInTheDocument();
     });
 
+    test("Then it should show an icon of a cross out eye", () => {
+      renderWithProviders(<LoginForm />);
+
+      const expectedImage = screen.getByRole("img", { name: iconTitle });
+
+      expect(expectedImage).toBeInTheDocument();
+    });
+
     test("Then it should show a button with the text 'Login!' on it", () => {
       renderWithProviders(<LoginForm />);
 
@@ -43,8 +52,33 @@ describe("Given LoginForm component", () => {
     });
   });
 
+  describe("When the user clicks on the cross out eye icon", () => {
+    test("Then the icon should change", async () => {
+      renderWithProviders(<LoginForm />);
+
+      const expectedIcon = screen.getByRole("img", { name: iconTitle });
+
+      await act(async () => await userEvent.click(expectedIcon));
+
+      expect(expectedIcon).not.toBeInTheDocument();
+    });
+
+    test("Then the icon should change to an open eye", async () => {
+      const newIconTitle = "Hide password";
+
+      renderWithProviders(<LoginForm />);
+
+      const crossOutEyeIcon = screen.getByRole("img", { name: iconTitle });
+      await act(async () => await userEvent.click(crossOutEyeIcon));
+
+      const expectedNewIcon = screen.getByRole("img", { name: newIconTitle });
+
+      expect(expectedNewIcon).toBeInTheDocument();
+    });
+  });
+
   describe("When the user writes in the email input", () => {
-    test("Then the value of this input changes", async () => {
+    test("Then the value of this input should change", async () => {
       renderWithProviders(<LoginForm />);
 
       const emailInput = screen.getByRole("textbox", { name: emailLabel });
@@ -56,7 +90,7 @@ describe("Given LoginForm component", () => {
   });
 
   describe("When the user writes in the password input", () => {
-    test("Then the value of this input changes", async () => {
+    test("Then the value of this input should change", async () => {
       renderWithProviders(<LoginForm />);
 
       const passwordInput = screen.getByLabelText(passwordLabel);
