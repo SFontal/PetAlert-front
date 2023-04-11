@@ -6,9 +6,10 @@ import { RouterProvider } from "react-router";
 
 export const renderRouterWithProviders = (
   ui?: React.ReactElement,
-  preloadedState?: PreloadedState<RootState>
+  preloadedState?: PreloadedState<RootState>,
+  path?: string
 ) => {
-  const testRouter = ui ? getComponentRouter(ui) : router;
+  const testRouter = ui ? getComponentRouter(ui, path) : router;
 
   return renderWithProviders(
     <RouterProvider router={testRouter}></RouterProvider>,
