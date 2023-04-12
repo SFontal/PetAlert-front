@@ -1,38 +1,94 @@
 import { screen } from "@testing-library/react";
-import { renderWithProviders } from "../../testUtils/renderWithProviders";
+import { renderRouterWithProviders } from "../../testUtils/renderRouterWithProviders";
 import Layout from "./Layout";
+import { mockedUserState } from "../../mocks/user";
+import { mockedUiState } from "../../mocks/ui";
 
 describe("Given a Layout component", () => {
-  describe("When it's rendered", () => {
-    test("Then it should show a main section with Aria-label `Find your new family member`", () => {
-      const arialLabelText = "Find your new family member";
-      renderWithProviders(<Layout />);
+  describe("When it is rendered", () => {
+    test("Then it should show a header section`", () => {
+      const arialLabelText = "header";
 
-      const expectedAriaLabel = screen.getByRole("main", {
+      renderRouterWithProviders(<Layout />);
+
+      const expectedHeaderSection = screen.getByRole("banner", {
         name: arialLabelText,
       });
 
-      expect(expectedAriaLabel).toBeInTheDocument();
+      expect(expectedHeaderSection).toBeInTheDocument();
     });
 
-    test("Then it should not show an image of a sad dog", () => {
-      renderWithProviders(<Layout />);
-      const imageAlt = "A sad dog";
+    test("Then it should show an aside section with guest info if the user is it not logged`", () => {
+      const arialLabelText = "guest info";
 
-      const expectedImage = screen.queryByRole("img", { name: imageAlt });
+      renderRouterWithProviders(<Layout />);
 
-      expect(expectedImage).toBeNull();
+      const expectedGuestAsideSection = screen.getByRole("complementary", {
+        name: arialLabelText,
+      });
+
+      expect(expectedGuestAsideSection).toBeInTheDocument();
     });
-  });
 
-  describe("When it's rendered and modal state property isOpen is true", () => {
-    test("Then it should show an image of a sad dog", () => {
-      renderWithProviders(<Layout />, { ui: { isOpen: true, isError: false } });
-      const imageAlt = "A sad dog";
+    test("Then it should not show an aside section if the path is /login`", () => {
+      const arialLabelText = "user info";
+      const path = "/login";
+
+      renderRouterWithProviders(<Layout />, mockedUserState, path);
+
+      const expectedUserAsideSection = screen.queryByRole("complementary", {
+        name: arialLabelText,
+      });
+
+      expect(expectedUserAsideSection).toBeNull();
+    });
+
+    test("Then it should show an aside section with user info if the user is it logged`", () => {
+      const arialLabelText = "user info";
+
+      renderRouterWithProviders(<Layout />, mockedUserState);
+
+      const expectedUserAsideSection = screen.getByRole("complementary", {
+        name: arialLabelText,
+      });
+
+      expect(expectedUserAsideSection).toBeInTheDocument();
+    });
+
+    test("Then it should show a main section`", () => {
+      const arialLabelText = "Find your new family member";
+
+      renderRouterWithProviders(<Layout />);
+
+      const expectedMainSection = screen.getByRole("main", {
+        name: arialLabelText,
+      });
+
+      expect(expectedMainSection).toBeInTheDocument();
+    });
+
+    test("Then it should show an image of a sad dog if modal state property isOpen is true", () => {
+      const imageAlt = "a sad dog";
+
+      renderRouterWithProviders(<Layout />, {
+        ui: { ...mockedUiState, isOpen: true },
+      });
 
       const expectedImage = screen.getByRole("img", { name: imageAlt });
 
       expect(expectedImage).toBeInTheDocument();
+    });
+
+    test("Then it should not show an image of a sad dog if modal state property isOpen is false", () => {
+      const imageAlt = "A sad dog";
+
+      renderRouterWithProviders(<Layout />, {
+        ui: { ...mockedUiState, isOpen: false },
+      });
+
+      const expectedImage = screen.queryByRole("img", { name: imageAlt });
+
+      expect(expectedImage).toBeNull();
     });
   });
 });
