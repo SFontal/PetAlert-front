@@ -1,13 +1,26 @@
 import { screen } from "@testing-library/react";
-import { renderWithProviders } from "../../testUtils/renderWithProviders";
+import { renderRouterWithProviders } from "../../testUtils/renderRouterWithProviders";
 import Layout from "../Layout/Layout";
 import App from "./App";
 
 describe("Given an App component", () => {
-  describe("When its rendered", () => {
+  describe("When it is rendered", () => {
+    test("Then it should show a header section`", () => {
+      const arialLabelText = "header";
+
+      renderRouterWithProviders(<Layout />);
+
+      const expectedAriaLabel = screen.getByRole("banner", {
+        name: arialLabelText,
+      });
+
+      expect(expectedAriaLabel).toBeInTheDocument();
+    });
+
     test("Then it should show an image as website logo", () => {
-      renderWithProviders(<App></App>);
       const imageAlt = "pet alert logo";
+
+      renderRouterWithProviders(<App />);
 
       const expectedLogo = screen.getByRole("img", { name: imageAlt });
 
@@ -15,17 +28,27 @@ describe("Given an App component", () => {
     });
 
     test("Then it should show a link as website logo", () => {
-      renderWithProviders(<App></App>);
-      const linkName = "pet alert logo";
+      const linkName = "link to pet alert home page";
+
+      renderRouterWithProviders(<App />);
 
       const expectedLogo = screen.getByRole("link", { name: linkName });
 
       expect(expectedLogo).toBeInTheDocument();
     });
 
-    test("Then it should show a main section with Aria-label `Find your new family member`", () => {
+    test("Then it should show an aside section`", () => {
+      renderRouterWithProviders(<Layout />);
+
+      const expectedAriaLabel = screen.getByRole("complementary");
+
+      expect(expectedAriaLabel).toBeInTheDocument();
+    });
+
+    test("Then it should show a main section`", () => {
       const arialLabelText = "Find your new family member";
-      renderWithProviders(<Layout />);
+
+      renderRouterWithProviders(<Layout />);
 
       const expectedAriaLabel = screen.getByRole("main", {
         name: arialLabelText,
