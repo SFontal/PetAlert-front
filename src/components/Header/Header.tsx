@@ -2,15 +2,22 @@ import HeaderStyled from "./HeaderStyled";
 
 const Header = (): JSX.Element => {
   return (
-    <HeaderStyled className="header">
+    <HeaderStyled className="header" aria-label="header">
       <div className="header__logo logo">
-        <a href="home">
+        <a
+          className="logo__home-link link"
+          aria-label="link to pet alert home page"
+          title="pet alert home"
+          href="/"
+        >
           <img src="favicon.png" alt="pet alert logo" height={60} width={70} />
+          <div className="link__text text">
+            <h1 className="text__title">pet alert!</h1>
+            <em className="text__subtitle" aria-label="subtitle">
+              adopt, rescue, love!
+            </em>
+          </div>
         </a>
-        <div className="logo__text">
-          <h1>pet alert!</h1>
-          <span>adopt, rescue, love!</span>
-        </div>
       </div>
       <svg
         width="50"
