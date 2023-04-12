@@ -4,16 +4,18 @@ const ModalStyled = styled.div`
   align-items: center;
   display: flex;
   justify-content: center;
-  position: absolute;
 
   .modal__background {
     background-color: ${(props) => props.theme.colors.main};
-    height: 100vh;
-    opacity: 0.5;
+    height: 88vh;
+    opacity: 0.75;
+    position: absolute;
+    top: 90px;
     width: 100vw;
+    z-index: 1;
   }
 
-  .modal__alert {
+  .alert {
     background-color: ${(props) => props.theme.colors.main};
     border: solid 3px ${(props) => props.theme.colors.quaternary};
     border-radius: 10px;
@@ -24,25 +26,32 @@ const ModalStyled = styled.div`
     max-width: 300px;
     padding: 25px;
     position: absolute;
+    top: 40%;
+    z-index: 2;
 
-    div {
+    .images {
       align-items: flex-start;
       display: flex;
       justify-content: space-between;
+
+      &__pet {
+        transform: scaleX(-1);
+      }
+
+      &__close-button {
+        padding: 0;
+      }
     }
 
-    img {
-      transform: scaleX(-1);
-    }
-
-    span {
+    .message {
       align-self: center;
       font-family: "Baloo Bhai 2";
       font-weight: 600;
-    }
+      font-size: 1.13rem;
 
-    .highlighted {
-      color: ${(props) => props.theme.colors.quaternary};
+      &__highlighted {
+        color: ${(props) => props.theme.colors.quaternary};
+      }
     }
   }
 `;

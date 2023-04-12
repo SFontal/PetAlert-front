@@ -1,25 +1,31 @@
 import { closeModalActionCreator } from "../../store/features/uiSlice/uiSlice";
 import { useAppDispatch } from "../../store/hooks";
 import ModalStyled from "./ModalStyled";
+
 const Modal = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
-  const handleCloseModal = () => {
+  const closeModalHandler = () => {
     dispatch(closeModalActionCreator());
   };
 
   return (
-    <ModalStyled>
+    <ModalStyled className="modal" role="dialog">
       <div className="modal__background"></div>
       <div className="modal__alert alert">
-        <div>
+        <div className="alert__images images">
           <img
-            src="../../../images/sad-dogo.png"
-            alt="A sad dog"
-            height={118}
-            width={99}
+            className="images__pet"
+            alt="a cartoon sad dog"
+            aria-label="a sad dog"
+            src="../images/sad-dogo.webp"
           />
-          <button onClick={handleCloseModal}>
+          <button
+            className="images__close-button"
+            onClick={closeModalHandler}
+            aria-label="close error alert"
+            title="close"
+          >
             <svg
               width="25"
               height="25"
@@ -46,9 +52,9 @@ const Modal = (): JSX.Element => {
             </svg>
           </button>
         </div>
-        <span>
-          Something went <span className="highlighted">wrong</span>
-        </span>
+        <em className="alert__message message" aria-label="error message">
+          Something went <span className="message__highlighted">wrong!</span>
+        </em>
       </div>
     </ModalStyled>
   );
