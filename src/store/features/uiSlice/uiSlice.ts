@@ -1,9 +1,10 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ModalState, UiState } from "../types";
+import { createSlice } from "@reduxjs/toolkit";
+import { UiState } from "../types";
 
 const initialUiState: UiState = {
   isError: false,
   isOpen: false,
+  isPasswordHide: true,
   isSubmitDisabled: true,
 };
 
@@ -11,16 +12,14 @@ export const uiSlice = createSlice({
   name: "ui",
   initialState: initialUiState,
   reducers: {
-    openModal: (
-      currentUiState: UiState,
-      action: PayloadAction<ModalState>
-    ): UiState => ({
+    openModal: (currentUiState: UiState): UiState => ({
       ...currentUiState,
       isOpen: true,
     }),
 
     closeModal: (currentUiState: UiState): UiState => ({
-      ...initialUiState,
+      ...currentUiState,
+      isOpen: false,
     }),
 
     ableSubmit: (currentUiState: UiState): UiState => ({
@@ -32,6 +31,16 @@ export const uiSlice = createSlice({
       ...currentUiState,
       isSubmitDisabled: true,
     }),
+
+    hidePassword: (currentUiState: UiState): UiState => ({
+      ...currentUiState,
+      isPasswordHide: true,
+    }),
+
+    unhidePassword: (currentUiState: UiState): UiState => ({
+      ...currentUiState,
+      isPasswordHide: false,
+    }),
   },
 });
 
@@ -41,4 +50,6 @@ export const {
   closeModal: closeModalActionCreator,
   ableSubmit: ableSubmitActionCreator,
   disableSubmit: disableSubmitActionCreator,
+  hidePassword: hidePasswordActionCreator,
+  unhidePassword: unhidePasswordActionCreator,
 } = uiSlice.actions;
