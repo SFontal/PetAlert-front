@@ -33,7 +33,7 @@ const useUser = () => {
 
       navigate("/");
     } catch (error) {
-      dispatch(openModalActionCreator({ isOpen: true, isError: true }));
+      dispatch(openModalActionCreator());
     }
   };
 

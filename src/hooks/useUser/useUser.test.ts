@@ -59,13 +59,9 @@ describe("Given a useUser custom Hook", () => {
         },
       } = renderHook(() => useUser(), { wrapper: Wrapper });
 
-      const modalState = { isOpen: true, isError: true };
-
       await act(() => loginUser(mockedUserCredentials));
 
-      expect(mockedDispatch).toHaveBeenCalledWith(
-        openModalActionCreator(modalState)
-      );
+      expect(mockedDispatch).toHaveBeenCalledWith(openModalActionCreator());
     });
   });
 
