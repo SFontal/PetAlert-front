@@ -14,5 +14,6 @@ export interface ModalState {
 }
 
 export interface UiState extends ModalState {
+  isPasswordHide: boolean;
   isSubmitDisabled: boolean;
 }
