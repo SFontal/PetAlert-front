@@ -1,17 +1,18 @@
-import { ModalState, UiState } from "../types";
+import { UiState } from "../types";
 import { mockedUiState } from "../../../mocks/ui";
 import {
   ableSubmitActionCreator,
   closeModalActionCreator,
   disableSubmitActionCreator,
+  hidePasswordActionCreator,
   openModalActionCreator,
   uiReducer,
+  unhidePasswordActionCreator,
 } from "./uiSlice";
 
 describe("Given the ui reducer", () => {
   describe("When it receives a modal state closed and an open modal action", () => {
     test("Then it should return ui state with his property isOpen setted as true", () => {
-      const modalStateClosed: ModalState = { isOpen: false, isError: false };
       const newUiState: UiState = {
         ...mockedUiState,
         isOpen: true,
@@ -19,7 +20,7 @@ describe("Given the ui reducer", () => {
 
       const expectedUiState: UiState = uiReducer(
         { ...mockedUiState },
-        openModalActionCreator(modalStateClosed)
+        openModalActionCreator()
       );
 
       expect(newUiState).toStrictEqual(expectedUiState);
@@ -80,6 +81,46 @@ describe("Given the ui reducer", () => {
       const expectedUiState: UiState = uiReducer(
         { ...currentUiState },
         disableSubmitActionCreator()
+      );
+
+      expect(newUiState).toStrictEqual(expectedUiState);
+    });
+  });
+
+  describe("When it receives a hide password action", () => {
+    test("Then it should return the ui state with his property isPasswordHide setted as true", () => {
+      const currentUiState: UiState = {
+        ...mockedUiState,
+        isPasswordHide: false,
+      };
+      const newUiState: UiState = {
+        ...mockedUiState,
+        isPasswordHide: true,
+      };
+
+      const expectedUiState: UiState = uiReducer(
+        { ...currentUiState },
+        hidePasswordActionCreator()
+      );
+
+      expect(newUiState).toStrictEqual(expectedUiState);
+    });
+  });
+
+  describe("When it receives an unhide password action", () => {
+    test("Then it should return the ui state with his property isPasswordHide setted as false", () => {
+      const currentUiState: UiState = {
+        ...mockedUiState,
+        isPasswordHide: true,
+      };
+      const newUiState: UiState = {
+        ...mockedUiState,
+        isPasswordHide: false,
+      };
+
+      const expectedUiState: UiState = uiReducer(
+        { ...currentUiState },
+        unhidePasswordActionCreator()
       );
 
       expect(newUiState).toStrictEqual(expectedUiState);
