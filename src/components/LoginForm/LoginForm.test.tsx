@@ -3,7 +3,6 @@ import userEvent from "@testing-library/user-event";
 import { mockedUserCredentials, mockedUserState } from "../../mocks/user";
 import { renderWithProviders } from "../../testUtils/renderWithProviders";
 import LoginForm from "./LoginForm";
-import React from "react";
 
 const mockedLoginUser = jest.fn();
 jest.mock("../../hooks/useUser/useUser", () => () => ({
@@ -13,11 +12,14 @@ jest.mock("../../hooks/useUser/useUser", () => () => ({
 const { email, password } = mockedUserCredentials;
 const emailLabel = "Email";
 const passwordLabel = "Password";
-const iconTitle = "Unhide password";
 const buttonAriaLabel = "click to login";
 
 describe("Given LoginForm component", () => {
   describe("When it is rendered", () => {
+    const typeAttribute = "type";
+    const typePassword = "password";
+    const typeText = "text";
+
     test("Then it should show an input labeled 'Email'", () => {
       renderWithProviders(<LoginForm />, mockedUserState);
 
@@ -36,12 +38,28 @@ describe("Given LoginForm component", () => {
       expect(expectedPasswordInput).toBeInTheDocument();
     });
 
-    test("Then it should show an icon of a cross out eye", () => {
+    test("Then it should show an input labeled 'Password' with its attribute type setted as pasword", () => {
       renderWithProviders(<LoginForm />);
 
-      const expectedImage = screen.getByRole("img", { name: iconTitle });
+      const expectedPasswordInput = screen.getByLabelText(passwordLabel);
 
-      expect(expectedImage).toBeInTheDocument();
+      expect(expectedPasswordInput).toHaveAttribute(
+        typeAttribute,
+        typePassword
+      );
+    });
+
+    test("Then it should show an input labeled 'Password' with its attribute type setted as text if the user clicks on its icon", async () => {
+      const iconTitle = "Unhide password";
+
+      renderWithProviders(<LoginForm />);
+
+      const passwordInputIcon = screen.getByRole("img", { name: iconTitle });
+      await userEvent.click(passwordInputIcon);
+
+      const expectedPasswordInput = screen.getByLabelText(passwordLabel);
+
+      expect(expectedPasswordInput).toHaveAttribute(typeAttribute, typeText);
     });
 
     test("Then it should show a button with 'click to login' as aria label", () => {
@@ -52,31 +70,6 @@ describe("Given LoginForm component", () => {
       });
 
       expect(expectedButton).toBeInTheDocument();
-    });
-  });
-
-  describe("When the user clicks on the cross out eye icon", () => {
-    test("Then the icon should change", async () => {
-      renderWithProviders(<LoginForm />);
-
-      const expectedIcon = screen.getByRole("img", { name: iconTitle });
-
-      await userEvent.click(expectedIcon);
-
-      expect(expectedIcon).not.toBeInTheDocument();
-    });
-
-    test("Then the icon should change to an open eye", async () => {
-      const newIconTitle = "Hide password";
-
-      renderWithProviders(<LoginForm />);
-
-      const crossOutEyeIcon = screen.getByRole("img", { name: iconTitle });
-      await userEvent.click(crossOutEyeIcon);
-
-      const expectedNewIcon = screen.getByRole("img", { name: newIconTitle });
-
-      expect(expectedNewIcon).toBeInTheDocument();
     });
   });
 
